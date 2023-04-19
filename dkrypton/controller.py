@@ -2,13 +2,12 @@
 
 from functools import partial
 
-from dkrypton.constants import *
 from PyQt6.QtWidgets import QMenu
                              
 
 class DkryptonCtrl():
     """
-    Main calculator controller class
+    Controller principal
     """
     
     def __init__(self, model, view):
