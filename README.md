@@ -3,8 +3,7 @@ Decipher / Cipher Software
 
 ---------
 > __Warning__:  
-<b>For personal use or commercial use at your own risk !  
-I'm not a professional    
+<b>For personal use or commercial use at your own risk !   
 This is only an amateur and personal project</b>  
 ---------
 
