@@ -10,6 +10,7 @@ class DkryptonCtrl():
     """
     Main calculator controller class
     """
+    
     def __init__(self, model, view):
         self._evaluate = model
         self._view = view
@@ -21,63 +22,60 @@ class DkryptonCtrl():
         lance tous les décodages de l'onglet Crypto Classiques
         """
 
-        #on commence par effacer les éventuels anciens décodages
+        # on commence par effacer les éventuels anciens décodages :
         self._view._ui.combo_cc_cryptoplus.clear()
         self._view._ui.combo_cc_cryptomoins.clear()
         self._view._ui.lineEdit_cc_vigenere.setText("")
         self._view._ui.lineEdit_cc_beaufortall.setText("")
         self._view._ui.lineEdit_cc_beaufort.setText("")
         
+        # Vigenère
         result = self._evaluate.vigenere_deco(self._view._ui.combo_cc_crypto.currentText(),
                                               self._view._ui.combo_cc_cle1.currentText(),
                                               self._view._ui.lineEdit_cc_alpha.text(),
                                               0)
         
-        self._view._ui.lineEdit_cc_vigenere.setText(result)
-        print('le résulat du Vigenère est : ', result)
-
+        self._view._ui.lineEdit_cc_vigenere.setText(result)        
         
+        # Beaufort Allemand
         result = self._evaluate.vigenere_deco(self._view._ui.combo_cc_crypto.currentText(),
                                               self._view._ui.combo_cc_cle1.currentText(),
                                               self._view._ui.lineEdit_cc_alpha.text(),
                                               1)
         
         self._view._ui.lineEdit_cc_beaufortall.setText(result)
-        print('le résulat du Beaufort Allemand est : ', result)
-
+        
+        # Beaufort
         result = self._evaluate.vigenere_deco(self._view._ui.combo_cc_crypto.currentText(),
                                               self._view._ui.combo_cc_cle1.currentText(),                                            
                                               self._view._ui.lineEdit_cc_alpha.text(),
                                               2)
         
-        self._view._ui.lineEdit_cc_beaufort.setText(result)
-        print('le résulat du Beaufort est : ', result)
+        self._view._ui.lineEdit_cc_beaufort.setText(result)       
         
-        
+        # Crypto + Clé
         result = self._evaluate.crypto_plus(self._view._ui.combo_cc_crypto.currentText(),
                                               self._evaluate.transfo_alpha_num(self._view._ui.combo_cc_cle1.currentText(),
                                                                                self._view._ui.lineEdit_cc_alpha.text()),
                                               self._view._ui.lineEdit_cc_alpha.text(),
                                             True) #pour addition
-        self._view._ui.combo_cc_cryptoplus.addItem(result)
+        self._view._ui.combo_cc_cryptoplus.addItem(result)        
         
-        print("le résulat du Crypto_plus est : ", result)
-
+        # Crypto - Clé
         result = self._evaluate.crypto_plus(self._view._ui.combo_cc_crypto.currentText(),
                                               self._evaluate.transfo_alpha_num(self._view._ui.combo_cc_cle1.currentText(),
                                                                                self._view._ui.lineEdit_cc_alpha.text()),
                                               self._view._ui.lineEdit_cc_alpha.text(),
                                             False) #pour soustraction
-        self._view._ui.combo_cc_cryptomoins.addItem(result)
+        self._view._ui.combo_cc_cryptomoins.addItem(result)        
         
-        print("le résulat du Crypto_moins est : ", result)
 
     def _cscDecode(self, rien):
         """
         lance tous les décodages de l'onglet Crypto Sans Clé
         """
 
-        #Commence par effacer les anciens décodages éventuels
+        # Commence par effacer les anciens décodages éventuels
         self._view._ui.combo_csc_cesar.clear()
 
         # les 25 décalages possible d'un César
@@ -88,7 +86,7 @@ class DkryptonCtrl():
                                                 True) #pour addition
             self._view._ui.combo_csc_cesar.addItem(result)
     
-
+    # Création contextMenu : marche pas pour l'instant
     def _openMenu(self, location):
         menu = self.my_textbox.createStandardContextMenu()
         # add extra items to the menu
