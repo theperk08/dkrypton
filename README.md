@@ -19,6 +19,8 @@ As you can see in the code, you will need these python libraries :
 
 ```
 
+## USAGE  
+Just launch Dkrypton.py and enjoy !
 
 Tabs :  
 **Crypto Classiques**:  
