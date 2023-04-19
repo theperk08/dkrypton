@@ -32,7 +32,7 @@ Tabs :
 
 
 ## EXAMPLE :
-![Screenshot des exemples de messages reçus](/Version_1.jpg)
+![Screenshot de l'onglet Crypto Classiques](/Version_1.jpg)
 
 ## NOTES :  
 - a lot of ciphers will be add later
