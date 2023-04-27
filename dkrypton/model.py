@@ -1,9 +1,11 @@
 # model.py
 
+
 class Models:
     def __init__(self):
         pass
 
+    
 
     def is_num(chaine):
         """
@@ -112,4 +114,18 @@ class Models:
                 resultat += lettre
                     
         return resultat
+
+    def calcul_IC(dico, total):
+        """
+        fonction qui calcule l'IC
+        en prenant un dico du nombre d'apparitions des lettres
+        et la longueur total de la chaîne étudiée
+        """
         
+        IC = 0
+        for value in dico.values():
+            IC += value * (value -1)
+
+        IC = IC/(total * (total - 1))
+
+        return IC
