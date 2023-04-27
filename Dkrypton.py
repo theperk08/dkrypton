@@ -2,14 +2,14 @@
 
 import sys
 
-from dkrypton.view import DkryptonUi
-from dkrypton.controller import DkryptonCtrl
-from dkrypton.model import Models
+from dkrypton.view7 import DkryptonUi
+from dkrypton.controller7 import DkryptonCtrl
+from dkrypton.model7 import Models
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
-__version__ = "1.0"
+__version__ = "1.1"
 __author__ = "Manuel Musy"
 
 def main():
@@ -26,3 +26,6 @@ def main():
     
 if __name__ == "__main__":
     main()
+
+
+    
