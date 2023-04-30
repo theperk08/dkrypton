@@ -2,9 +2,9 @@
 
 import sys
 
-from dkrypton.view import DkryptonUi
-from dkrypton.controller import DkryptonCtrl
-from dkrypton.model import Models
+from dkrypton.view8 import DkryptonUi
+from dkrypton.controller8 import DkryptonCtrl
+from dkrypton.model8 import Models
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
