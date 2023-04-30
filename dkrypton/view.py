@@ -8,7 +8,7 @@ QTabWidget, QTableWidgetItem, QHBoxLayout, QVBoxLayout, QGridLayout)
 from PyQt6.QtGui import QAction
 
 
-from dkrypton.view_dkrypton import Ui_MainWindow
+from dkrypton.view_dkrypton8 import Ui_MainWindow # MplCanvas
 
 # Main view class for calculator GUI
 class DkryptonUi(QMainWindow):

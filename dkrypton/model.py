@@ -1,5 +1,5 @@
 # model.py
-
+import plotly.express as px
 
 class Models:
     def __init__(self):
@@ -129,3 +129,74 @@ class Models:
         IC = IC/(total * (total - 1))
 
         return IC
+    
+
+    def casse_vigenere(chaine, freq_theorique):
+
+        long = 1
+        # pour stocker les longueurs de clé possibles
+        dico_div = {}
+
+        for k in range(len(chaine)-3):
+            tri = chaine[k:k+3]
+            liste_tri = [k]
+            for j in range(k+1, len(chaine)-3):
+                if chaine[j:j+3] == tri:
+                    liste_tri += [j-liste_tri[-1]]
+
+            if len(liste_tri) > 1:
+                for nombre in liste_tri[1:]:
+                    liste = []
+                    for divi in range(2, int(nombre//2)):
+                        if nombre % divi == 0:
+                            liste += [divi]
+                    
+                    for a in liste:
+                        if a in dico_div.keys():
+                            dico_div[a] += 1
+                        else:
+                            dico_div[a] = 1
+                
+        maxi = max(dico_div, key = dico_div.get)
+        
+        print('Longueur probable de la clé :', maxi)
+        
+
+        dico = {}
+        
+        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+        cle = ""
+
+        for i in range(maxi):
+            # on split tous les 'longueur de clé' caractères
+            chaine_cle = [chaine[k] for k in range(i,len(chaine), maxi)]
+            chaine_cle = "".join(chaine_cle)
+            # pour faire une analyse de fréquence
+            for lettre in alphabet:
+                dico[lettre] = 0
+            for lettre in chaine_cle:
+                try:
+                    dico[lettre] += 1
+                except:
+                    pass
+            # sachant que la lettre la plus courante est un E
+            cle += max(dico, key = dico.get)
+            
+
+        print("La clé est alors :", cle)
+        # on renvoit la clé, à laquelle il faudra appliquer un décalage de César - 4
+        return maxi, cle
+            
+
+    def diviseurs(nombre):
+        """
+        renvoie la liste des diviseurs d'un nombre
+        """
+        liste = []
+        for n in range(2, int(nombre//2)):
+            if nombre % n == 0:
+                liste += [n]
+
+        return n
+        

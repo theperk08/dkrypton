@@ -1,6 +1,7 @@
 # controller.py
 
 from functools import partial
+import plotly.express as px
 
 from PyQt6.QtWidgets import QMenu
                              
@@ -150,14 +151,12 @@ class DkryptonCtrl():
         texte = self._view._ui.textedit_can_crypto.toPlainText()
         texte = str(texte).splitlines()
         texte = ''.join(texte)
-
         
         caract = ',.-_()[] \'"'
         
         for cara in caract:
-            texte = texte.replace(cara,'')        
-        
-
+            texte = texte.replace(cara,'')
+            
         ### suppression des accentes et cédilles
         #accents = "âãàéèêëïîôôùüûÂÁÀÃÉÈËÊÎÏÔOÕõÙÜÛçÇÑñń"
         #equivalents = "aaaeeeeiioouuuAAAAEEEEIIOOOOUUUcCNnn"
@@ -171,7 +170,7 @@ class DkryptonCtrl():
         print(texte_format)
 
 
-        ## création dico {lettres: fréquence}
+        ## création dico {lettres: nombre d'apparition}
         total = len(texte_format)
         dico = {}
         alphabet = self._view._ui.lineEdit_can_alpha.text()
@@ -188,23 +187,54 @@ class DkryptonCtrl():
 
         print(dico) 
 
-        analyse = "Longueur :{}".format(total)
+        analyse = "Longueur du crypto : {}".format(total)
+
+        ## dico {lettres : fréquences d'apparition}
+        
+        dico_freq = {key : value / total for key, value in dico.items()}
+        print(dico_freq)
 
         ## Calcul IC
 
-        IC = self._evaluate.calcul_IC(dico, total)
-        
+        IC = self._evaluate.calcul_IC(dico, total)        
         print(IC)
         
-        analyse += '\nIC : ' + str(round(IC,6))
         
+        analyse += '\nIC : ' + str(round(IC,6))        
 
-        self._view._ui.textedit_can_analyse.setText(analyse)
+      
  
-    
+        ## Affichage stats fréquences lettres    
 
-    
+        valeurs_x = list(dico_freq.keys())
+        valeurs_y = list(dico_freq.values())
+
+        self._view._ui.window_can_graph.plot(valeurs_x, valeurs_y)
+
+        longueur, cle_vigenere = self._evaluate.casse_vigenere(texte_format, '')
+
+
+        analyse += '\n\nLongueur probable de clé si Vigenère : ' + str(longueur)
+        cle_probable = self._evaluate.crypto_plus(cle_vigenere,
+                                              [4], # car lettre la plus fréquente est E
+                                              self._view._ui.lineEdit_can_alpha.text(),
+                                              False)
+        analyse += '\nClé probable : ' + cle_probable
+
+        texte_decrypte = self._evaluate.vigenere_deco(texte_format,
+                                                      cle_probable,
+                                                      self._view._ui.lineEdit_can_alpha.text(),
+                                                      0)
+
+        # AFFICHAGE FINAL DANS LA CASE Analyse:
+        self._view._ui.textedit_can_analyse.setText(analyse)
+
+        
+        self._view._ui.textedit_can_decrypte.setText(texte_decrypte)
+
+        
     def _openMenu(self, location):
+        # marche pas pour l'instant
         menu = self.my_textbox.createStandardContextMenu()
         # add extra items to the menu
         print('ici bon')
