@@ -2,14 +2,14 @@
 
 import sys
 
-from dkrypton.view8 import DkryptonUi
-from dkrypton.controller8 import DkryptonCtrl
-from dkrypton.model8 import Models
 
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
-__version__ = "1.1"
+from dkrypton.view import DkryptonUi
+from dkrypton.controller import DkryptonCtrl
+from dkrypton.model import Models
+
+__version__ = "1.2"
 __author__ = "Manuel Musy"
 
 def main():
