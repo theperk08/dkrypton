@@ -37,6 +37,7 @@ Tabs :
 
 ## EXAMPLE :
 ![Screenshot de l'onglet Crypto Classiques](/Version_1.jpg)
+![Screenshot de l'onglet Crypto Classiques](/Version_1_2.jpg)
 
 ## NOTES :  
 - a lot of ciphers will be add later
