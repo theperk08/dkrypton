@@ -14,6 +14,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 from matplotlib.figure import Figure
 import random
+import numpy as np
 
 
 class Window_Graph(QtWidgets.QWidget):
@@ -40,13 +41,22 @@ class Window_Graph(QtWidgets.QWidget):
         self.ax.clear()             
        
  
-    def plot(self, data_x, data_y):
+    def plot(self, data_x, data_y, data_x2, data_y2):
 
         # on efface d'abord l'ancien graphique
         self.efface()
         
         # on dessine la nouvelle
-        self.ax.bar(data_x, data_y)
+        nombres = np.arange(len(data_x))
+        width = 0.35
+        self.ax.bar(nombres - width/2, data_y2, width, label = 'français')
+        self.ax.bar(nombres + width/2, data_y, width, label = 'crypté')
+        self.ax.set_xticks(nombres)
+
+        self.ax.set_xticklabels(list(data_x))
+                        
+        self.ax.legend()
+        self.ax.set_title('Distribution des fréquences (en %) dans le texte')
  
         # on rafraîchit l'affichage
         self.canvas.draw()

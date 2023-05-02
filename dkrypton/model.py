@@ -1,5 +1,5 @@
 # model.py
-import plotly.express as px
+
 
 class Models:
     def __init__(self):
@@ -169,16 +169,10 @@ class Models:
             liste_max = []
             maxi_occu = max(dico_div.values())
             for key, value in dico_div.items():
-                if value == maxi_occu:
+                if value == maxi_occu or value == maxi_occu - 1:
                     liste_max += [str(key)]  #pour affiche sous forme de string
-            print(liste_max)
-
+            print(liste_max)            
             
-                    
-            try:
-                maxi = max(dico_div, key = dico_div.get)
-            except:
-                maxi = 0
             
             print('Longueur(s) probable(s) de la clé : ', " ; ".join(liste_max))
 
