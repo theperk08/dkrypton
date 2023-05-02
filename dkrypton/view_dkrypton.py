@@ -12,10 +12,7 @@ import pyqtgraph as pg
 import matplotlib
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
-
 from matplotlib.figure import Figure
-
-
 import random
 
 
@@ -37,18 +34,23 @@ class Window_Graph(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()     
         layout.addWidget(self.canvas)        
         self.setLayout(layout)
-        
+
+    def efface(self):
+        # pour effacer l'ancienne figure        
+        self.ax.clear()             
+       
  
     def plot(self, data_x, data_y):
-        
-        # on efface l'ancienne figure      
-        self.ax.clear()
+
+        # on efface d'abord l'ancien graphique
+        self.efface()
         
         # on dessine la nouvelle
         self.ax.bar(data_x, data_y)
  
         # on rafraîchit l'affichage
         self.canvas.draw()
+        
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -59,6 +61,10 @@ class Ui_MainWindow(object):
         x3 = 360
         x4 = 500
         x5 = 600
+        x6 = 800
+
+        y2 = 350
+        
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         
@@ -233,6 +239,21 @@ class Ui_MainWindow(object):
         self.combo_csc_cesar.setObjectName("combo_csc_cesar")
         self.combo_csc_cesar.setStyleSheet("font-family: Courier")
 
+        self.label_csc_scytale = QtWidgets.QLabel(parent=self.tab_csc)
+        self.label_csc_scytale.setGeometry(QtCore.QRect(x1, 180, 47, 30))
+        self.label_csc_scytale.setObjectName("label_csc_scytale")       
+        self.combo_csc_scytale = QtWidgets.QComboBox(parent=self.tab_csc)
+        self.combo_csc_scytale.setGeometry(QtCore.QRect(x2, 180, 300, 22))
+        self.combo_csc_scytale.setObjectName("combo_csc_scytale")
+        self.combo_csc_scytale.setStyleSheet("font-family: Courier")
+
+        #self.spinbox_csc_scytale = QtWidgets.QSpinBox(parent=self.tab_csc)        
+        #self.spinbox_csc_scytale.setObjectName("spinbox_csc_scytale")
+        #self.spinbox_csc_scytale.setGeometry(QtCore.QRect(x1 + 60, 40, 40, 20))
+        #self.spinbox_csc_scytale.setStyleSheet("background-color: salmon")
+        #self.spinbox_csc_scytale.setRange(2, 100)
+        #self.spinbox_csc_scytale.setValue(2)
+        
 
         # onglet comptage texte
         self.tab_ctx = QtWidgets.QWidget()
@@ -255,7 +276,7 @@ class Ui_MainWindow(object):
         self.label_ctx_crypto.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         
         self.combo_ctx_crypto = QtWidgets.QComboBox(parent=self.tab_ctx)
-        self.combo_ctx_crypto.setGeometry(QtCore.QRect(x2, 255, 300, 22))
+        self.combo_ctx_crypto.setGeometry(QtCore.QRect(x2 - 20, 255, 310, 22))
         self.combo_ctx_crypto.setObjectName("combo_ctx_crypto")
         self.combo_ctx_crypto.setStyleSheet("font-family: Courier")
         self.combo_ctx_crypto.setEditable(True)
@@ -266,29 +287,74 @@ class Ui_MainWindow(object):
         self.pushButton_ctx_Go.setStyleSheet("background-color: dodgerblue")
 
 
+
+        self.label_ctx_unitaires = QtWidgets.QLabel(parent=self.tab_ctx)
+        self.label_ctx_unitaires.setGeometry(QtCore.QRect(x6, 20, 120, 25))
+        self.label_ctx_unitaires.setObjectName("label_ctx_unitaires")
+        self.label_ctx_unitaires.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        
+        
         self.label_ctx_direc_df = QtWidgets.QLabel(parent=self.tab_ctx)
-        self.label_ctx_direc_df.setGeometry(QtCore.QRect(x4, 20, 98, 35))
+        self.label_ctx_direc_df.setGeometry(QtCore.QRect(x4, 50, 98, 35))
         self.label_ctx_direc_df.setObjectName("label_ctx_direc_df")
         self.label_ctx_direc_df.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.label_ctx_direc_df.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         
         self.combo_ctx_direc_df = QtWidgets.QComboBox(parent=self.tab_ctx)
-        self.combo_ctx_direc_df.setGeometry(QtCore.QRect(x5, 20, 300, 22))
+        self.combo_ctx_direc_df.setGeometry(QtCore.QRect(x5, 55, 400, 22))
         self.combo_ctx_direc_df.setObjectName("combo_ctx_direc_df")
         self.combo_ctx_direc_df.setStyleSheet("font-family: Courier")
 
+        self.label_ctx_direc_ench = QtWidgets.QLabel(parent=self.tab_ctx)
+        self.label_ctx_direc_ench.setGeometry(QtCore.QRect(x4, 90, 98, 35))
+        self.label_ctx_direc_ench.setObjectName("label_ctx_direc_ench")
+        self.label_ctx_direc_ench.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.label_ctx_direc_ench.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        
+        self.combo_ctx_direc_ench = QtWidgets.QComboBox(parent=self.tab_ctx)
+        self.combo_ctx_direc_ench.setGeometry(QtCore.QRect(x5, 95, 400, 22))
+        self.combo_ctx_direc_ench.setObjectName("combo_ctx_direc_ench")
+        self.combo_ctx_direc_df.setStyleSheet("font-family: Courier")
+        
+        self.label_ctx_inverse_fd = QtWidgets.QLabel(parent=self.tab_ctx)
+        self.label_ctx_inverse_fd.setGeometry(QtCore.QRect(x4, 125, 98, 35))
+        self.label_ctx_inverse_fd.setObjectName("label_ctx_inverse_fd")
+        self.label_ctx_inverse_fd.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.label_ctx_inverse_fd.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        
+        self.combo_ctx_inverse_fd = QtWidgets.QComboBox(parent=self.tab_ctx)
+        self.combo_ctx_inverse_fd.setGeometry(QtCore.QRect(x5, 130, 400, 22))
+        self.combo_ctx_inverse_fd.setObjectName("combo_ctx_inverse_fd")
+        self.combo_ctx_inverse_fd.setStyleSheet("font-family: Courier")
+        
 
-
+        self.label_ctx_couples = QtWidgets.QLabel(parent=self.tab_ctx)
+        self.label_ctx_couples.setGeometry(QtCore.QRect(x6, y2, 120, 25))
+        self.label_ctx_couples.setObjectName("label_ctx_couples")
+        self.label_ctx_couples.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        
         self.label_ctx_direc_ll = QtWidgets.QLabel(parent=self.tab_ctx)
-        self.label_ctx_direc_ll.setGeometry(QtCore.QRect(x4 + 35, 100, 63, 35))
+        self.label_ctx_direc_ll.setGeometry(QtCore.QRect(x4 + 35, y2 + 30, 63, 35))
         self.label_ctx_direc_ll.setObjectName("label_ctx_direc_ll")
         self.label_ctx_direc_ll.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.label_ctx_direc_ll.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         
         self.combo_ctx_direc_ll = QtWidgets.QComboBox(parent=self.tab_ctx)
-        self.combo_ctx_direc_ll.setGeometry(QtCore.QRect(x5, 100, 300, 22))
+        self.combo_ctx_direc_ll.setGeometry(QtCore.QRect(x5, y2 + 35, 400, 22))
         self.combo_ctx_direc_ll.setObjectName("combo_ctx_direc_ll")
-        self.combo_ctx_direc_ll.setStyleSheet("font-family: Courier")        
+        self.combo_ctx_direc_ll.setStyleSheet("font-family: Courier")
+
+        self.label_ctx_inverse_ll = QtWidgets.QLabel(parent=self.tab_ctx)
+        self.label_ctx_inverse_ll.setGeometry(QtCore.QRect(x4 + 35, y2 + 70, 63, 35))
+        self.label_ctx_inverse_ll.setObjectName("label_ctx_inverse_ll")
+        self.label_ctx_inverse_ll.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.label_ctx_inverse_ll.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        
+        self.combo_ctx_inverse_ll = QtWidgets.QComboBox(parent=self.tab_ctx)
+        self.combo_ctx_inverse_ll.setGeometry(QtCore.QRect(x5, y2 + 75, 400, 22))
+        self.combo_ctx_inverse_ll.setObjectName("combo_ctx_inverse_ll")
+        self.combo_ctx_inverse_ll.setStyleSheet("font-family: Courier")
+        
         
         # onglet cryptanalyse
         self.tab_can = QtWidgets.QWidget()
@@ -340,6 +406,25 @@ class Ui_MainWindow(object):
         self.textedit_can_decrypte.setObjectName("text_can_decrypte")
         self.textedit_can_decrypte.setStyleSheet("font-family: Courier")
         self.textedit_can_decrypte.setReadOnly(True)
+
+        self.pushButton_can_force_longcle = QtWidgets.QPushButton(parent=self.tab_can)
+        self.pushButton_can_force_longcle.setGeometry(QtCore.QRect(x4 + 255, 25, 95, 35))
+        self.pushButton_can_force_longcle.setObjectName("pushButton_can_force_longcle")
+        self.pushButton_can_force_longcle.setStyleSheet("background-color: dodgerblue")
+
+        self.spinbox_can_force_longcle = QtWidgets.QSpinBox(parent=self.tab_can)        
+        self.spinbox_can_force_longcle.setObjectName("spinbox_can_force_longcle")
+        self.spinbox_can_force_longcle.setGeometry(QtCore.QRect(x4 + 360, 40, 40, 20))
+        self.spinbox_can_force_longcle.setStyleSheet("background-color: lightblue")
+
+        self.label_can_vige = QtWidgets.QLabel(parent=self.tab_can)
+        self.label_can_vige.setGeometry(QtCore.QRect(x4, y2 - 20, 115, 20))
+        self.label_can_vige.setObjectName("label_can_vige")
+
+        self.combo_can_vige = QtWidgets.QComboBox(parent=self.tab_can)
+        self.combo_can_vige.setGeometry(QtCore.QRect(x4, y2, 400, 22))
+        self.combo_can_vige.setObjectName("combo_can_vige")
+        self.combo_can_vige.setStyleSheet("font-family: Courier")
 
 
         # Ajout des onglets à la tab d'onglets
@@ -408,15 +493,20 @@ class Ui_MainWindow(object):
         self.label_csc_crypto.setText(_translate("MainWindow", "Crypto"))
         self.pushButton_csc_Go.setText(_translate("MainWindow", "Go !"))
         self.label_csc_cesar.setText(_translate("MainWindow", "César"))
+        self.label_csc_scytale.setText(_translate("MainWindow", "Scytale\n1 lettre sur N"))
 
                 
         self.label_ctx_text1.setText(_translate("MainWindow", "Texte où compter"))
         self.label_ctx_crypto.setText(_translate("MainWindow", "CRYPTO\n(Clé de comptage)\nséparateur ."))
         self.pushButton_ctx_Go.setText(_translate("MainWindow", "Go !"))
-
+        self.label_ctx_unitaires.setText(_translate('MainWindow', "Comptages unitaires"))
         self.label_ctx_direc_df.setText(_translate("MainWindow", "direct\ndébut texte -> fin"))
-        self.label_ctx_direc_ll.setText(_translate("MainWindow", "direct\nligne, lettre"))
+        self.label_ctx_direc_ench.setText(_translate("MainWindow", "direct, enchaîné"))
+        self.label_ctx_inverse_fd.setText(_translate("MainWindow", "inversé\nfin texte -> début"))
 
+        self.label_ctx_couples.setText(_translate('MainWindow', "Comptages couples"))
+        self.label_ctx_direc_ll.setText(_translate("MainWindow", "direct\nligne, lettre"))
+        self.label_ctx_inverse_ll.setText(_translate("MainWindow", "inversé\nlettre, ligne"))
 
         self.label_can_alpha.setText(_translate("MainWindow", "Alphabet"))
         self.lineEdit_can_alpha.setText(_translate("MainWindow", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
@@ -424,6 +514,8 @@ class Ui_MainWindow(object):
         self.label_can_crypto.setText(_translate("MainWindow", "Crypto"))
         self.label_can_analyse.setText(_translate("MainWindow", "Analyse :"))
         self.label_can_decrypte.setText(_translate("MainWindow", "Texte décrypté"))
+        self.pushButton_can_force_longcle.setText(_translate("MainWindow", "Forcer avec la\nlongueur de clé :"))
+        self.label_can_vige.setText(_translate("MainWindow", "Décryptages possibles :"))
         
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_cc), _translate("MainWindow", "Crypto Classiques"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_csc), _translate("MainWindow", "Crypto sans clé"))

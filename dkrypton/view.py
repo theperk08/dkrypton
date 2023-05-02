@@ -10,40 +10,108 @@ from PyQt6.QtGui import QAction
 
 from dkrypton.view_dkrypton import Ui_MainWindow # MplCanvas
 
-# Main view class for calculator GUI
 class DkryptonUi(QMainWindow):
     """
     Main calculator GUI
     """
-    def __init__(self):#, model): #, controller):
+    def __init__(self):
         super().__init__()
-        #self.setWindowTitle("Dekrypton")
-        #self.setFixedSize(1250, 850)
-
-        #self._model = model
-        #self._controller = controller
+        
         self._ui = Ui_MainWindow()
         self._ui.setupUi(self)
 
-        #self._ui.pushButton_cc_Go.clicked.connect(self._controller._ccDecode)
-         
+
+    def dico_cc(self):
+        dico = {'alphabet' : self._ui.lineEdit_cc_alpha.text(),
+                'crypto' : self._ui.combo_cc_crypto.currentText(),
+                'cle1' : self._ui.combo_cc_cle1.currentText()                
+                }
+        return dico
+
+    def affiche_cc(self, affichages):
+        self._ui.lineEdit_cc_vigenere.setText(affichages['vigenere'])
+        self._ui.lineEdit_cc_beaufortall.setText(affichages['beaufort_allemand'])
+        self._ui.lineEdit_cc_beaufort.setText(affichages['beaufort'])
+        self._ui.combo_cc_cryptoplus.addItem(affichages['crypto_plus'])
+        self._ui.combo_cc_cryptomoins.addItem(affichages['crypto_moins'])            
+    
+    def efface_cc(self):
+        self._ui.combo_cc_cryptoplus.clear()
+        self._ui.combo_cc_cryptomoins.clear()
+        self._ui.lineEdit_cc_vigenere.setText("")
+        self._ui.lineEdit_cc_beaufortall.setText("")
+        self._ui.lineEdit_cc_beaufort.setText("")
+
+
+    def dico_csc(self):
+        dico = {'alphabet' : self._ui.lineEdit_csc_alpha.text(),
+                'crypto' : self._ui.combo_csc_crypto.currentText()              
+                }
+        return dico
+
+    def affiche_csc(self, affichages):
+        for result_cesar in affichages['cesar']:
+            self._ui.combo_csc_cesar.addItem(result_cesar)
+
+        for result_scytale in affichages['scytale']:
+            self._ui.combo_csc_scytale.addItem(result_scytale)
+            
+    def efface_csc(self):
+        self._ui.combo_csc_cesar.clear()
+        self._ui.combo_csc_scytale.clear()
+
+
+    def dico_ctx(self):
+        dico = {'texte' : self._ui.textedit_ctx_text1.toPlainText(),
+                'crypto' : self._ui.combo_ctx_crypto.currentText()                               
+                }
+        return dico
+
+    def affiche_ctx(self, affichages):
+        self._ui.combo_ctx_direc_df.addItem(affichages['result_ddf'])
+        self._ui.combo_ctx_direc_ench.addItem(affichages['result_de'])
+        self._ui.combo_ctx_inverse_fd.addItem(affichages['result_ifd'])
+        self._ui.combo_ctx_direc_ll.addItem(affichages['result_dll']) 
+        self._ui.combo_ctx_inverse_ll.addItem(affichages['result_ill'])
+        
+    
+    def efface_ctx(self):
+        self._ui.combo_ctx_direc_df.clear()
+        self._ui.combo_ctx_direc_ench.clear()
+        self._ui.combo_ctx_inverse_fd.clear()
+        
+        self._ui.combo_ctx_direc_ll.clear()
+        self._ui.combo_ctx_inverse_ll.clear()
+        
+
+
+    def dico_can(self):
+        dico = {'alphabet' : self._ui.lineEdit_can_alpha.text(),
+                'crypto' : self._ui.textedit_can_crypto.toPlainText(),
+                'analyse' : self._ui.textedit_can_analyse,
+                'long_cle' : self._ui.spinbox_can_force_longcle
+                }
+        return dico
+
+    def affiche_can(self, affichages):
+        self._ui.textedit_can_analyse.setText(affichages['analyse'])
+        for k in range(len(affichages['decrypte'])):
+            self._ui.combo_can_vige.addItem(affichages['decrypte'][k])
+            
+        self._ui.textedit_can_decrypte.setText(affichages['decrypte'][0])        
+    
+    def efface_can(self):
+        self._ui.textedit_can_analyse.setText('')
+        self._ui.textedit_can_decrypte.setText('')
+        self._ui.combo_can_vige.clear()
+ 
+
+        
     def contextMenuEvent(self, event):
         # Show the context menu
         self.context_menu.exec(event.globalPos())
  
-    def action1_triggered(self):
-        # Handle the "Action 1" action
-        pass
- 
-    def action2_triggered(self):
-        # Handle the "Action 2" action
-        pass
- 
-    def action3_triggered(self):
-        # Handle the "Action 3" action
-        pass
-
-    
+       
     def faux_tab(self):
         self.faux = QWidget()
         self.faux_layout_v1 = QVBoxLayout()
@@ -101,72 +169,6 @@ class DkryptonUi(QMainWindow):
         helpMenu.addAction(aide)
         
     
-    def _createDisplay(self):
-        """
-        Calculator display/output
-        """
-        self.display = QLineEdit()
-        self.display.setFixedHeight(35)
-        self.display.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.display.setReadOnly(True)
-        self.faux_layout_v1.addWidget(self.display)
-        
-    def _createButtons(self):
-        """
-        Calculator buttons
-        """
-        self.buttons = {}
-        buttonsLayout = QGridLayout()
-        # Button text: position on QGridLayout
-        buttons = {"7": (0, 0),
-                   "8": (0, 1),
-                   "9": (0, 2),
-                   "/": (0, 3),
-                   "C": (0, 4),
-                   "4": (1, 0),
-                   "5": (1, 1),
-                   "6": (1, 2),
-                   "*": (1, 3),
-                   "(": (1, 4),
-                   "1": (2, 0),
-                   "2": (2, 1),
-                   "3": (2, 2),
-                   "-": (2, 3),
-                   ")": (2, 4),
-                   "0": (3, 0),
-                   "00": (3, 1),
-                   ".": (3, 2),
-                   "+": (3, 3),
-                   "=": (3, 4),
-                  }
-        # Create buttons and add to grid layout
-        for btnText, pos in buttons.items():
-            self.buttons[btnText] = QPushButton(btnText)
-            self.buttons[btnText].setFixedSize(40, 40)
-            buttonsLayout.addWidget(self.buttons[btnText], pos[0], pos[1])
-        # Add buttonsLayout to cc_layout_v2 layout
-        self.faux_layout_v1.addLayout(buttonsLayout)
-        #self.cc_layout_v2.addLayout(buttonsLayout)
-        
-    def setDisplayText(self, text):
-        """
-        Set the text/content in calculator display
-        """
-        self.display.setText(text)
-        self.display.setFocus()
-        
-    def displayText(self):
-        """
-        Get current text/content from calculator display
-        """
-        return self.display.text()
-        
-    def clearDisplay(self):
-        """
-        Clear calculator display
-        """
-        self.setDisplayText("")
-
     def cles1_remplacer(self):
         pass
 
@@ -179,8 +181,4 @@ class DkryptonUi(QMainWindow):
     def cles2_ajouter(self):
         pass
 
-    def clearDisplay_cc(self):
-        """
-        Clear calculator display
-        """
-        pass
+    

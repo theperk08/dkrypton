@@ -4,8 +4,7 @@ import plotly.express as px
 class Models:
     def __init__(self):
         pass
-
-    
+        
 
     def is_num(chaine):
         """
@@ -131,62 +130,92 @@ class Models:
         return IC
     
 
-    def casse_vigenere(chaine, freq_theorique):
+    def casse_vigenere(chaine, longueur = []):
+        print('longueurs', longueur)
+        # pour les longueurs possibles de clés
+        liste_max = []
+        # si pas de longueur de clé suggéré        
+        if longueur == []:
 
-        long = 1
-        # pour stocker les longueurs de clé possibles
-        dico_div = {}
+            # longueur des séquences répétées à rechercher
+            long_seq = 3
+            # pour stocker les longueurs de clé possibles
+            dico_div = {}
 
-        for k in range(len(chaine)-3):
-            tri = chaine[k:k+3]
-            liste_tri = [k]
-            for j in range(k+1, len(chaine)-3):
-                if chaine[j:j+3] == tri:
-                    liste_tri += [j-liste_tri[-1]]
-
-            if len(liste_tri) > 1:
-                for nombre in liste_tri[1:]:
-                    liste = []
-                    for divi in range(2, int(nombre//2)):
-                        if nombre % divi == 0:
-                            liste += [divi]
-                    
-                    for a in liste:
-                        if a in dico_div.keys():
-                            dico_div[a] += 1
-                        else:
-                            dico_div[a] = 1
-                
-        maxi = max(dico_div, key = dico_div.get)
-        
-        print('Longueur probable de la clé :', maxi)
-        
-
-        dico = {}
-        
-        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-        cle = ""
-
-        for i in range(maxi):
-            # on split tous les 'longueur de clé' caractères
-            chaine_cle = [chaine[k] for k in range(i,len(chaine), maxi)]
-            chaine_cle = "".join(chaine_cle)
-            # pour faire une analyse de fréquence
-            for lettre in alphabet:
-                dico[lettre] = 0
-            for lettre in chaine_cle:
-                try:
-                    dico[lettre] += 1
-                except:
-                    pass
-            # sachant que la lettre la plus courante est un E
-            cle += max(dico, key = dico.get)
             
 
-        print("La clé est alors :", cle)
-        # on renvoit la clé, à laquelle il faudra appliquer un décalage de César - 4
-        return maxi, cle
+            for k in range(len(chaine) - long_seq):
+                tri = chaine[k : k + long_seq]
+                liste_tri = [k]
+                for j in range(k + 1, len(chaine) - long_seq):
+                    if chaine[j : j + long_seq] == tri:
+                        liste_tri += [j - liste_tri[-1]]
+
+                if len(liste_tri) > 1:
+                    for nombre in liste_tri[1:]:
+                        liste = []
+                        for divi in range(2, int(nombre//2)):
+                            if nombre % divi == 0:
+                                liste += [divi]
+                        
+                        for a in liste:
+                            if a in dico_div.keys():
+                                dico_div[a] += 1
+                            else:
+                                dico_div[a] = 1
+
+            print(dico_div)
+
+            liste_max = []
+            maxi_occu = max(dico_div.values())
+            for key, value in dico_div.items():
+                if value == maxi_occu:
+                    liste_max += [str(key)]  #pour affiche sous forme de string
+            print(liste_max)
+
+            
+                    
+            try:
+                maxi = max(dico_div, key = dico_div.get)
+            except:
+                maxi = 0
+            
+            print('Longueur(s) probable(s) de la clé : ', " ; ".join(liste_max))
+
+            longueur = liste_max
+
+        # si longueur suggérée ou si on a trouvé une longueur possible de la clé juste avant
+        longueurs = longueur
+        cles =[]
+        if len(longueur) > 0 :
+            
+        
+            alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+            
+
+            for j in longueur:
+                cle = ""
+                dico = {}
+
+                for i in range(int(j)):
+                    # on split tous les 'longueur de clé' caractères
+                    chaine_cle = [chaine[k] for k in range(i,len(chaine), int(j))]
+                    chaine_cle = "".join(chaine_cle)
+                    # pour faire une analyse de fréquence
+                    for lettre in alphabet:
+                        dico[lettre] = 0
+                    for lettre in chaine_cle:
+                        try:
+                            dico[lettre] += 1
+                        except:
+                            pass
+                    # sachant que la lettre la plus courante est un E
+                    cle += max(dico, key = dico.get)
+                cles += [cle]
+                print("Pour une longueur de {}, la clé est alors : {}".format(j, cle))
+        # on renvoit les clés, auxquelles il faudra appliquer un décalage de César - 4
+        return longueurs, cles
             
 
     def diviseurs(nombre):

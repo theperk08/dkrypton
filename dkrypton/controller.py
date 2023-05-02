@@ -1,18 +1,14 @@
 # controller.py
 
 from functools import partial
-import plotly.express as px
-
 from PyQt6.QtWidgets import QMenu
                              
 
 class DkryptonCtrl():
-    """
-    Main calculator controller class
-    """
+    
     def __init__(self, model, view):
         self._evaluate = model
-        self._view = view
+        self._view = view        
         self._connectSignals()  # Register signals/slots
         print('ici')
     
@@ -21,107 +17,162 @@ class DkryptonCtrl():
         lance tous les décodages de l'onglet Crypto Classiques
         """
 
-        #on commence par effacer les éventuels anciens décodages
-        self._view._ui.combo_cc_cryptoplus.clear()
-        self._view._ui.combo_cc_cryptomoins.clear()
-        self._view._ui.lineEdit_cc_vigenere.setText("")
-        self._view._ui.lineEdit_cc_beaufortall.setText("")
-        self._view._ui.lineEdit_cc_beaufort.setText("")
+        # on récupère tous les éléments utiles de l'onglet, sous forme de dico
+        dico_elements = self._view.dico_cc()
+        print(dico_elements)
         
-        result = self._evaluate.vigenere_deco(self._view._ui.combo_cc_crypto.currentText(),
-                                              self._view._ui.combo_cc_cle1.currentText(),
-                                              self._view._ui.lineEdit_cc_alpha.text(),
+        #Commence par effacer les anciens décodages éventuels
+        self._view.efface_cc()
+
+        # décryptages
+        
+        result_vigenere = self._evaluate.vigenere_deco(dico_elements['crypto'],
+                                              dico_elements['cle1'],
+                                              dico_elements['alphabet'],
                                               0)
         
-        self._view._ui.lineEdit_cc_vigenere.setText(result)
-        print('le résulat du Vigenère est : ', result)
+        
+        print('le résulat du Vigenère est : ', result_vigenere)
 
         
-        result = self._evaluate.vigenere_deco(self._view._ui.combo_cc_crypto.currentText(),
-                                              self._view._ui.combo_cc_cle1.currentText(),
-                                              self._view._ui.lineEdit_cc_alpha.text(),
+        result_beaufort_all = self._evaluate.vigenere_deco(dico_elements['crypto'],
+                                              dico_elements['cle1'],
+                                              dico_elements['alphabet'],
                                               1)
         
-        self._view._ui.lineEdit_cc_beaufortall.setText(result)
-        print('le résulat du Beaufort Allemand est : ', result)
+        
+        print('le résulat du Beaufort Allemand est : ', result_beaufort_all)
 
-        result = self._evaluate.vigenere_deco(self._view._ui.combo_cc_crypto.currentText(),
-                                              self._view._ui.combo_cc_cle1.currentText(),                                            
-                                              self._view._ui.lineEdit_cc_alpha.text(),
+        result_beaufort = self._evaluate.vigenere_deco(dico_elements['crypto'],
+                                              dico_elements['cle1'],                                            
+                                              dico_elements['alphabet'],
                                               2)
-        
-        self._view._ui.lineEdit_cc_beaufort.setText(result)
-        print('le résulat du Beaufort est : ', result)
-        
-        
-        result = self._evaluate.crypto_plus(self._view._ui.combo_cc_crypto.currentText(),
-                                              self._evaluate.transfo_alpha_num(self._view._ui.combo_cc_cle1.currentText(),
-                                                                               self._view._ui.lineEdit_cc_alpha.text()),
-                                              self._view._ui.lineEdit_cc_alpha.text(),
-                                            True) #pour addition
-        self._view._ui.combo_cc_cryptoplus.addItem(result)
-        
-        print("le résulat du Crypto_plus est : ", result)
 
-        result = self._evaluate.crypto_plus(self._view._ui.combo_cc_crypto.currentText(),
-                                              self._evaluate.transfo_alpha_num(self._view._ui.combo_cc_cle1.currentText(),
-                                                                               self._view._ui.lineEdit_cc_alpha.text()),
-                                              self._view._ui.lineEdit_cc_alpha.text(),
-                                            False) #pour soustraction
-        self._view._ui.combo_cc_cryptomoins.addItem(result)
+        print('le résulat du Beaufort est : ', result_beaufort)
         
-        print("le résulat du Crypto_moins est : ", result)
+        
+        result_crypto_plus = self._evaluate.crypto_plus(self._view._ui.combo_cc_crypto.currentText(),
+                                              self._evaluate.transfo_alpha_num(dico_elements['cle1'],
+                                                                               dico_elements['alphabet']),
+                                              dico_elements['alphabet'],
+                                            True) #pour addition
+        
+        
+        print("le résulat du Crypto_plus est : ", result_crypto_plus)
+
+        result_crypto_moins = self._evaluate.crypto_plus(dico_elements['crypto'],
+                                              self._evaluate.transfo_alpha_num(dico_elements['cle1'],
+                                                                               dico_elements['alphabet']),
+                                              dico_elements['alphabet'],
+                                            False) #pour soustraction
+       
+        
+        print("le résulat du Crypto_moins est : ", result_crypto_moins)
+
+        # AFFICHAGE FINAL
+
+        affichages = {'vigenere' : result_vigenere,
+                      'beaufort_allemand' : result_beaufort_all,
+                      'beaufort' : result_beaufort,
+                      'crypto_plus' : result_crypto_plus,
+                      'crypto_moins' : result_crypto_moins
+                      }
+        
+        self._view.affiche_cc(affichages)
 
     def _cscDecode(self, rien):
         """
         lance tous les décodages de l'onglet Crypto Sans Clé
         """
-
+        # on récupère tous les éléments utiles de l'onglet, sous forme de dico
+        dico_elements = self._view.dico_csc()
+        print(dico_elements)
+        
         #Commence par effacer les anciens décodages éventuels
-        self._view._ui.combo_csc_cesar.clear()
+        self._view.efface_csc()
 
-        # les 25 décalages possible d'un César
+        # décryptages    
+
+        ## les 25 décalages possible d'un César
+        liste_cesar = []
         for i in range(1, 26):
-            result = self._evaluate.crypto_plus(self._view._ui.combo_csc_crypto.currentText(),
+            result = self._evaluate.crypto_plus(dico_elements['crypto'],
                                                 [i],
-                                                self._view._ui.lineEdit_cc_alpha.text(),
+                                                dico_elements['alphabet'],
                                                 True) #pour addition
-            self._view._ui.combo_csc_cesar.addItem(result)
-    
+            liste_cesar += [result]
+
+        ## les décryptages de Scytale
+        liste_scytale = []
+        crypto = dico_elements['crypto']
+        for i in range(2, len(crypto) + 1):
+            result = crypto[0]
+            num = 0
+            for k in range(len(crypto) - 1):
+                num += i
+                result += crypto[num % len(crypto)]
+            liste_scytale += [result]
+
+        affichages = {"cesar" : liste_cesar,
+                      "scytale" : liste_scytale}
+        
+        self._view.affiche_csc(affichages)
+           
     def _ctxDecode(self, rien):
         """
         lance tous les décodages de l'onglet Crypto Sans Clé
-        """
-        print('ok')
-        #Commence par effacer les anciens décodages éventuels
+        """      
+        # on récupère tous les éléments utiles de l'onglet, sous forme de dico
+        dico_elements = self._view.dico_ctx()
+        print(dico_elements)
         
-        self._view._ui.combo_ctx_direc_df.clear()
-        self._view._ui.combo_ctx_direc_ll.clear()
+        #;Commence par effacer les anciens décodages éventuels        
+        self._view.efface_ctx()
 
+        # Décryptages
+        
         # stockage du crypto en liste
-        liste_crypto = list(map(int,self._view._ui.combo_ctx_crypto.currentText().split('.')))
-
+        liste_crypto = list(map(int,dico_elements['crypto'].split('.')))
        
 
         # récupération du texte
-        texte = self._view._ui.textedit_ctx_text1.toPlainText()
+        texte = dico_elements['texte']
         # par lignes pour comptages couplés
         text_lignes = str(texte).splitlines()
         # et tout à la suite pour comptages unitaires
         text_tout = ''.join(text_lignes)
         
         # comptages unitaires
+        ## direct début fin
         result_ddf = ""
         for nombre in liste_crypto:
             try:
                 result_ddf += text_tout[nombre - 1]
             except:
                 result_ddf += '?'
-            
-        self._view._ui.combo_ctx_direc_df.addItem(result_ddf)
+
+        ## direct enchaîné
+        result_de = ""
+        numero = 0
+        for nombre in liste_crypto:
+            try:
+                numero += nombre 
+                result_de += text_tout[numero - 1]
+            except:
+                result_de += '?'
+
+        ## inverse fin début
+        result_ifd = ""
+        for nombre in liste_crypto:
+            try:
+                result_ifd += text_tout[-nombre]
+            except:
+                result_ifd += '?'
 
         # comptages couplés (seulement si nombre pairs de nombres dans le crypto
+        
         if len(liste_crypto) % 2 == 0:
+            ## direct ligne lettre
             result_dll = ""
             for k in range(len(liste_crypto)//2):
               
@@ -129,26 +180,42 @@ class DkryptonCtrl():
                     result_dll += text_lignes[liste_crypto[2*k] - 1][liste_crypto[2*k + 1] - 1]
                 except:
                     result_dll += '?'
-                
+            ## inversé lettre ligne
+            result_ill = ""
+            for k in range(len(liste_crypto)//2):              
+                try:
+                    result_ill += text_lignes[liste_crypto[2*k + 1] - 1][liste_crypto[2*k] - 1]
+                except:
+                    result_ill += '?'
         
 
-        self._view._ui.combo_ctx_direc_ll.addItem(result_dll)
+        affichages = {'result_ddf' : result_ddf,
+                      'result_de' : result_de,
+                      'result_ifd' : result_ifd,
+                      'result_dll' : result_dll,
+                      'result_ill' : result_ill}
+
+        self._view.affiche_ctx(affichages)
         
     
-    def _canDecode(self, rien):
+    def _canDecode(self):
         """
         lance tous les décodages de l'onglet Crypto Sans Clé
         """
 
-        #Commence par effacer les anciens décodages éventuels
-        #self._view._ui.combo_can_   .clear()
+        # on récupère tous les éléments utiles de l'onglet, sous forme de dico
+        dico_elements = self._view.dico_can()
 
+        print(dico_elements)
+        #Commence par effacer les anciens décodages éventuels
+        self._view.efface_can()
 
         # FORMATAGE DU TEXTE
 
         ### suppression des caractères de saut de lignes, de tabulation et d'espaces et autres non autorisés
 
-        texte = self._view._ui.textedit_can_crypto.toPlainText()
+        #texte = self._view._ui.textedit_can_crypto.toPlainText()
+        texte = dico_elements['crypto']
         texte = str(texte).splitlines()
         texte = ''.join(texte)
         
@@ -172,31 +239,32 @@ class DkryptonCtrl():
 
         ## création dico {lettres: nombre d'apparition}
         total = len(texte_format)
-        dico = {}
-        alphabet = self._view._ui.lineEdit_can_alpha.text()
+        dico_lettre = {}
+        #alphabet = self._view._ui.lineEdit_can_alpha.text()
+        alphabet = dico_elements['alphabet']
         print(alphabet)
         
         for lettre in alphabet:
-            dico[lettre] = 0
+            dico_lettre[lettre] = 0
         for lettre in texte_format:
             try:
-                dico[lettre] += 1
+                dico_lettre[lettre] += 1
             except:
                 pass
         
 
-        print(dico) 
+        print(dico_lettre) 
 
         analyse = "Longueur du crypto : {}".format(total)
 
         ## dico {lettres : fréquences d'apparition}
         
-        dico_freq = {key : value / total for key, value in dico.items()}
+        dico_freq = {key : value / total for key, value in dico_lettre.items()}
         print(dico_freq)
 
         ## Calcul IC
 
-        IC = self._evaluate.calcul_IC(dico, total)        
+        IC = self._evaluate.calcul_IC(dico_lettre, total)        
         print(IC)
         
         
@@ -209,28 +277,98 @@ class DkryptonCtrl():
         valeurs_x = list(dico_freq.keys())
         valeurs_y = list(dico_freq.values())
 
-        self._view._ui.window_can_graph.plot(valeurs_x, valeurs_y)
-
-        longueur, cle_vigenere = self._evaluate.casse_vigenere(texte_format, '')
-
-
-        analyse += '\n\nLongueur probable de clé si Vigenère : ' + str(longueur)
-        cle_probable = self._evaluate.crypto_plus(cle_vigenere,
-                                              [4], # car lettre la plus fréquente est E
-                                              self._view._ui.lineEdit_can_alpha.text(),
-                                              False)
-        analyse += '\nClé probable : ' + cle_probable
-
-        texte_decrypte = self._evaluate.vigenere_deco(texte_format,
-                                                      cle_probable,
-                                                      self._view._ui.lineEdit_can_alpha.text(),
-                                                      0)
-
-        # AFFICHAGE FINAL DANS LA CASE Analyse:
-        self._view._ui.textedit_can_analyse.setText(analyse)
+        print(valeurs_x, '\n', valeurs_y)
 
         
-        self._view._ui.textedit_can_decrypte.setText(texte_decrypte)
+        self._view._ui.window_can_graph.plot(valeurs_x, valeurs_y)
+
+        longueurs, cles_vigenere = self._evaluate.casse_vigenere(texte_format, [])
+
+
+        analyse += '\n Longueur de clé : Clé probable'
+        #analyse += '\n\nLongueur(s) probable(s) de clé si Vigenère : ' + ' ; '.join(longueurs)
+
+        texte_decrypte = ''
+
+        if len(longueurs) > 0:
+            liste_texte = []
+            for k in range(len(cles_vigenere)):
+                cle_probable = self._evaluate.crypto_plus(cles_vigenere[k],
+                                                      [4], # car lettre la plus fréquente est E
+                                                      dico_elements['alphabet'],
+                                                      False)
+                analyse += '\n{0:16} : {1}'.format(longueurs[k], cle_probable)
+
+                texte_decrypte = self._evaluate.vigenere_deco(dico_elements['crypto'],
+                                                              cle_probable,
+                                                              dico_elements['alphabet'],
+                                                              0)
+                liste_texte += [texte_decrypte]
+
+        # AFFICHAGE FINAL DANS LA CASE Analyse:
+
+
+        #dico_elements['analyse'].setText(analyse)      
+        #self._view._ui.textedit_can_decrypte.setText(texte_decrypte)
+
+        affichages = {'analyse' : analyse, 'decrypte' : liste_texte}
+        self._view.affiche_can(affichages)
+
+    def _canForce(self):        
+
+        # on récupère tous les éléments utiles de l'onglet, sous forme de dico
+        dico_elements = self._view.dico_can()
+
+        print(dico_elements)
+        #Commence par effacer les anciens décodages éventuels
+        self._view.efface_can()
+        
+
+        analyse = "Avec la longueur {} suggérée, ".format(dico_elements['long_cle'].value())
+
+        # on récupère la longueur de la clé souhaitée :
+        texte = dico_elements['crypto']
+        texte = str(texte).splitlines()
+        texte = ''.join(texte)
+        
+        caract = ',.-_()[] \'"'
+        
+        for cara in caract:
+            texte = texte.replace(cara,'')
+            
+        ### suppression des accentes et cédilles
+        #accents = "âãàéèêëïîôôùüûÂÁÀÃÉÈËÊÎÏÔOÕõÙÜÛçÇÑñń"
+        #equivalents = "aaaeeeeiioouuuAAAAEEEEIIOOOOUUUcCNnn"
+        accents = "ÂÁÀÃÉÈËÊÎÏÔÕÙÜÛÇÑ"
+        equivalents = "AAAAEEEEIIOOUUUCN"
+
+        texte_format = texte.upper()
+        for accent, lettre in zip(accents, equivalents):
+            texte_format = texte_format.replace(accent, lettre)
+
+        
+        
+
+        longueur, cle_vigenere = self._evaluate.casse_vigenere(texte_format, [dico_elements['long_cle'].value()])
+
+        
+        cle_probable = self._evaluate.crypto_plus(cle_vigenere[0],
+                                                  [4], # car lettre la plus fréquente est E
+                                                  dico_elements['alphabet'],
+                                                  False)
+        analyse += "Pour une longueur de {}, la clé probable est {}\n".format(longueur[0], cle_probable)
+        
+
+        texte_decrypte = self._evaluate.vigenere_deco(dico_elements['crypto'],
+                                                      cle_probable,
+                                                      dico_elements['alphabet'],
+                                                      0)
+
+        affichages = {'analyse' : analyse, 'decrypte' : [texte_decrypte]}
+        self._view.affiche_can(affichages)
+
+    def _canIndexChanged(self, index):
+        self._view._ui.textedit_can_decrypte.setText(self._view._ui.combo_can_vige.itemText(index))
 
         
     def _openMenu(self, location):
@@ -240,7 +378,6 @@ class DkryptonCtrl():
         print('ici bon')
         # show the menu
         menu.popup(self.mapToGlobal(location))
-
         
    
     def _connectSignals(self):
@@ -249,8 +386,10 @@ class DkryptonCtrl():
         et de leurs actions ("slots")        
         """
         
-        self._view._ui.pushButton_cc_Go.clicked.connect(partial(self._ccDecode, ''))
-        self._view._ui.pushButton_csc_Go.clicked.connect(partial(self._cscDecode, ''))
-        self._view._ui.pushButton_ctx_Go.clicked.connect(partial(self._ctxDecode, ''))
-        self._view._ui.pushButton_can_Go.clicked.connect(partial(self._canDecode, ''))
+        self._view._ui.pushButton_cc_Go.clicked.connect(partial(self._ccDecode))
+        self._view._ui.pushButton_csc_Go.clicked.connect(partial(self._cscDecode))
+        self._view._ui.pushButton_ctx_Go.clicked.connect(partial(self._ctxDecode))
+        self._view._ui.pushButton_can_Go.clicked.connect(partial(self._canDecode))
+        self._view._ui.pushButton_can_force_longcle.clicked.connect(partial(self._canForce))
+        self._view._ui.combo_can_vige.activated.connect(partial(self._canIndexChanged))
    
