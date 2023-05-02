@@ -170,10 +170,12 @@ class DkryptonCtrl():
                 result_ifd += '?'
 
         # comptages couplés (seulement si nombre pairs de nombres dans le crypto
-        
+
+        result_dll = ""
+        result_ill = ""
         if len(liste_crypto) % 2 == 0:
             ## direct ligne lettre
-            result_dll = ""
+            
             for k in range(len(liste_crypto)//2):
               
                 try:
@@ -181,7 +183,7 @@ class DkryptonCtrl():
                 except:
                     result_dll += '?'
             ## inversé lettre ligne
-            result_ill = ""
+            
             for k in range(len(liste_crypto)//2):              
                 try:
                     result_ill += text_lignes[liste_crypto[2*k + 1] - 1][liste_crypto[2*k] - 1]

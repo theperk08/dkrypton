@@ -324,7 +324,7 @@ class Ui_MainWindow(object):
         self.combo_ctx_direc_ench = QtWidgets.QComboBox(parent=self.tab_ctx)
         self.combo_ctx_direc_ench.setGeometry(QtCore.QRect(x5, 95, 400, 22))
         self.combo_ctx_direc_ench.setObjectName("combo_ctx_direc_ench")
-        self.combo_ctx_direc_df.setStyleSheet("font-family: Courier")
+        self.combo_ctx_direc_ench.setStyleSheet("font-family: Courier")
         
         self.label_ctx_inverse_fd = QtWidgets.QLabel(parent=self.tab_ctx)
         self.label_ctx_inverse_fd.setGeometry(QtCore.QRect(x4, 125, 98, 35))
