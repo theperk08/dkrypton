@@ -41,7 +41,7 @@ Tabs :
 ## EXAMPLES :
 <p float="left">
 <img alt = "onglet Crypto Classiques" src="Version_1.jpg" width="500" height = "800"/>
-<img alt = "onglet Comptage Texte" src="Version_1_2_compte_texte.jpg" width="800" height = "600"/>
+<img alt = "onglet Comptage Texte" src="Version_1_2_comptage_texte.jpg" width="800" height = "600"/>
 <img alt = "onglet Cryptanalyse" src="Version_1_2.jpg" width="800" height = "600"/> 
 </p>
 
