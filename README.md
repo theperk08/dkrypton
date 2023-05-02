@@ -30,14 +30,18 @@ Tabs :
 -> Enter a Crypto and a Clé 1 (key #1) and push the Go !  
 **Crypto sans clé**:  
 -> Enter a Crypto and push the Go !  
-**Cryptanalyse**  
+**Comptage texte**:  
+-> Enter a text and a crypto (numbers separated with a dot)
+**Cryptanalyse**:  
 -> for automatic analysis and decryption (not yet in use)
+
 
 
 
 ## EXAMPLES :
 <p float="left">
 <img alt = "onglet Crypto Classiques" src="Version_1.jpg" width="500" height = "800"/>
+<img alt = "onglet Comptage Texte" src="Version_1_2_compte_texte.jpg" width="800" height = "600"/>
 <img alt = "onglet Cryptanalyse" src="Version_1_2.jpg" width="800" height = "600"/> 
 </p>
 
