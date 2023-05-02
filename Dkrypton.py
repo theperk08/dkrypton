@@ -2,12 +2,11 @@
 
 import sys
 
-
-from PyQt6.QtWidgets import QApplication
-
 from dkrypton.view import DkryptonUi
 from dkrypton.controller import DkryptonCtrl
 from dkrypton.model import Models
+
+from PyQt6.QtWidgets import QApplication
 
 __version__ = "1.2"
 __author__ = "Manuel Musy"
@@ -21,6 +20,7 @@ def main():
     view = DkryptonUi()   # Appel du GUI
     view.show()         # Affichage du GUI
     model = Models          # Creation instance du model
+     
     DkryptonCtrl(model=model, view=view)  # Creation instance du controller
     sys.exit(dkrypt.exec())    # Execution de l'application en boucle
     
