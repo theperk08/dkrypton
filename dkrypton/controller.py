@@ -2,6 +2,7 @@
 
 from functools import partial
 from PyQt6.QtWidgets import QMenu
+from dkrypton.fonctions import *
                              
 
 class DkryptonCtrl():
@@ -198,7 +199,8 @@ class DkryptonCtrl():
                       'result_ill' : result_ill}
 
         self._view.affiche_ctx(affichages)
-        
+
+    
     
     def _canDecode(self):
         """
@@ -211,32 +213,15 @@ class DkryptonCtrl():
         print(dico_elements)
         #Commence par effacer les anciens décodages éventuels
         self._view.efface_can()
-
+       
         # FORMATAGE DU TEXTE
 
         ### suppression des caractères de saut de lignes, de tabulation et d'espaces et autres non autorisés
 
-        #texte = self._view._ui.textedit_can_crypto.toPlainText()
+    
         texte = dico_elements['crypto']
-        texte = str(texte).splitlines()
-        texte = ''.join(texte)
-        
-        caract = ',.-_()[] \'"'
-        
-        for cara in caract:
-            texte = texte.replace(cara,'')
-            
-        ### suppression des accentes et cédilles
-        #accents = "âãàéèêëïîôôùüûÂÁÀÃÉÈËÊÎÏÔOÕõÙÜÛçÇÑñń"
-        #equivalents = "aaaeeeeiioouuuAAAAEEEEIIOOOOUUUcCNnn"
-        accents = "ÂÁÀÃÉÈËÊÎÏÔÕÙÜÛÇÑ"
-        equivalents = "AAAAEEEEIIOOUUUCN"
 
-        texte_format = texte.upper()
-        for accent, lettre in zip(accents, equivalents):
-            texte_format = texte_format.replace(accent, lettre)
-        
-        print(texte_format)
+        texte_format = format_texte(texte)       
 
 
         ## création dico {lettres: nombre d'apparition}
@@ -245,17 +230,10 @@ class DkryptonCtrl():
         #alphabet = self._view._ui.lineEdit_can_alpha.text()
         alphabet = dico_elements['alphabet']
         print(alphabet)
-        
-        for lettre in alphabet:
-            dico_lettre[lettre] = 0
-        for lettre in texte_format:
-            try:
-                dico_lettre[lettre] += 1
-            except:
-                pass
-        
 
-        print(dico_lettre) 
+
+
+        dico_lettre = compteLettres(texte_format, alphabet) 
 
         analyse = "Longueur du crypto : {}".format(total)
 
@@ -286,7 +264,7 @@ class DkryptonCtrl():
         
 
         
-        self._view._ui.window_can_graph.plot(valeurs_x, valeurs_y, valeurs_x, freq_france)
+        
 
         longueurs, cles_vigenere = self._evaluate.casse_vigenere(texte_format, [])
 
@@ -311,14 +289,34 @@ class DkryptonCtrl():
                                                               0)
                 liste_texte += [texte_decrypte]
 
+        # dico de freqences du texte decrypte avec chacune des cles
+        freq_decrypte = []
+        for textes in liste_texte:
+            text_format = format_texte(textes)
+            dico_lettre = compteLettres(text_format, alphabet)
+            dico_freq = {key : value / total for key, value in dico_lettre.items()}
+            valeurs_y2 = list(dico_freq.values())
+            freq_decrypte += [valeurs_y2]
+            
+
+        
+        print(freq_decrypte)
+            
+
         # AFFICHAGE FINAL DANS LA CASE Analyse:
 
 
         #dico_elements['analyse'].setText(analyse)      
         #self._view._ui.textedit_can_decrypte.setText(texte_decrypte)
 
-        affichages = {'analyse' : analyse, 'decrypte' : liste_texte}
+        affichages = {'analyse' : analyse, 'decrypte' : liste_texte, 'freq' : freq_decrypte, 'valeurs' : [valeurs_x, valeurs_y, freq_france]}
         self._view.affiche_can(affichages)
+        ## et graphique des stats de distrib des frequences
+        self._view._ui.window_can_graph.plot(valeurs_x, valeurs_y, freq_france, freq_decrypte[0])
+
+        
+
+        
 
     def _canForce(self):        
 
@@ -334,25 +332,8 @@ class DkryptonCtrl():
 
         # on récupère la longueur de la clé souhaitée :
         texte = dico_elements['crypto']
-        texte = str(texte).splitlines()
-        texte = ''.join(texte)
-        
-        caract = ',.-_()[] \'"'
-        
-        for cara in caract:
-            texte = texte.replace(cara,'')
-            
-        ### suppression des accentes et cédilles
-        #accents = "âãàéèêëïîôôùüûÂÁÀÃÉÈËÊÎÏÔOÕõÙÜÛçÇÑñń"
-        #equivalents = "aaaeeeeiioouuuAAAAEEEEIIOOOOUUUcCNnn"
-        accents = "ÂÁÀÃÉÈËÊÎÏÔÕÙÜÛÇÑ"
-        equivalents = "AAAAEEEEIIOOUUUCN"
-
-        texte_format = texte.upper()
-        for accent, lettre in zip(accents, equivalents):
-            texte_format = texte_format.replace(accent, lettre)
-
-        
+        texte_format = format_texte(texte)      
+             
         
 
         longueur, cle_vigenere = self._evaluate.casse_vigenere(texte_format, [dico_elements['long_cle'].value()])
@@ -375,6 +356,14 @@ class DkryptonCtrl():
 
     def _canIndexChanged(self, index):
         self._view._ui.textedit_can_decrypte.setText(self._view._ui.combo_can_vige.itemText(index))
+        liste_x = [x.strip()[1] for x in self._view._ui.combo_can_valeurs.itemText(0)[1:-1].split(',')]
+        liste_y = [round(float(x),2) for x in self._view._ui.combo_can_valeurs.itemText(1)[1:-1].split(',')]
+        liste_france = [round(float(x),2) for x in self._view._ui.combo_can_valeurs.itemText(2)[1:-1].split(',')]
+        liste_z = [round(float(x),2) for x in self._view._ui.combo_can_vige_freq.itemText(index)[1:-1].split(',')]
+        self._view._ui.window_can_graph.plot(liste_x,
+                                             liste_y,
+                                             liste_france,
+                                             liste_z)
 
         
     def _openMenu(self, location):

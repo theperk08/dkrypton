@@ -97,13 +97,18 @@ class DkryptonUi(QMainWindow):
         self._ui.textedit_can_analyse.setText(affichages['analyse'])
         for k in range(len(affichages['decrypte'])):
             self._ui.combo_can_vige.addItem(affichages['decrypte'][k])
+            self._ui.combo_can_vige_freq.addItem(str(affichages['freq'][k]))
             
-        self._ui.textedit_can_decrypte.setText(affichages['decrypte'][0])        
+        self._ui.textedit_can_decrypte.setText(affichages['decrypte'][0])
+        for i in range(3):
+            self._ui.combo_can_valeurs.addItem(str(affichages['valeurs'][i]))
+                                               
     
     def efface_can(self):
         self._ui.textedit_can_analyse.setText('')
         self._ui.textedit_can_decrypte.setText('')
         self._ui.combo_can_vige.clear()
+        self._ui.combo_can_vige_freq.clear()
  
 
         

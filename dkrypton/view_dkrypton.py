@@ -22,15 +22,16 @@ class Window_Graph(QtWidgets.QWidget):
         super().__init__(parent)
  
         # a figure instance to plot on
-        self.figure = Figure()
+        self.figure = Figure(figsize=(15,2))
+        
  
         # création du canvas contenant la figure
         self.canvas = FigureCanvasQTAgg(self.figure)
 
         # on initialise toute de suite une figure
         # qu'on pourra effacer à chaque appel
-        self.ax = self.figure.add_subplot(111)       
- 
+        self.ax = self.figure.add_subplot(111, position=[0.05, 0.12, 0.85, 0.78]) #gauche, bas, large, haut
+        
         
         layout = QtWidgets.QVBoxLayout()     
         layout.addWidget(self.canvas)        
@@ -41,19 +42,22 @@ class Window_Graph(QtWidgets.QWidget):
         self.ax.clear()             
        
  
-    def plot(self, data_x, data_y, data_x2, data_y2):
+    def plot(self, data_x, data_y, data_y2, data_y3):
 
         # on efface d'abord l'ancien graphique
         self.efface()
         
         # on dessine la nouvelle
         nombres = np.arange(len(data_x))
-        width = 0.35
-        self.ax.bar(nombres - width/2, data_y2, width, label = 'français')
-        self.ax.bar(nombres + width/2, data_y, width, label = 'crypté')
+        width = 0.30
+        
+        self.ax.bar(nombres - width, data_y, width, label = 'crypté', color = 'red')
+        self.ax.bar(nombres , data_y2, width, label = 'théorique', color = 'blue')
+        self.ax.bar(nombres + width, data_y3, width, label = 'décrypté', color = 'green')
         self.ax.set_xticks(nombres)
 
         self.ax.set_xticklabels(list(data_x))
+        #self.ax.tick_params(pad = 15)
                         
         self.ax.legend()
         self.ax.set_title('Distribution des fréquences (en %) dans le texte')
@@ -405,7 +409,7 @@ class Ui_MainWindow(object):
         self.textedit_can_analyse.setReadOnly(True)
         
         self.window_can_graph = Window_Graph(parent = self.tab_can)
-        self.window_can_graph.setGeometry(QtCore.QRect(x1, 460, 500, 250))
+        self.window_can_graph.setGeometry(QtCore.QRect(x1, 460, 1100, 250))
 
         self.label_can_decrypte = QtWidgets.QLabel(parent=self.tab_can)
         self.label_can_decrypte.setGeometry(QtCore.QRect(x4, 40, 90, 20))
@@ -436,7 +440,18 @@ class Ui_MainWindow(object):
         self.combo_can_vige.setObjectName("combo_can_vige")
         self.combo_can_vige.setStyleSheet("font-family: Courier")
 
+        self.combo_can_vige_freq = QtWidgets.QComboBox(parent=self.tab_can)
+        self.combo_can_vige_freq.setGeometry(QtCore.QRect(x4, y2+40, 400, 22))
+        self.combo_can_vige_freq.setObjectName("combo_can_vige_freq")
+        self.combo_can_vige_freq.setStyleSheet("font-family: Courier")
+        self.combo_can_vige_freq.setVisible(False)
 
+        self.combo_can_valeurs = QtWidgets.QComboBox(parent=self.tab_can)
+        self.combo_can_valeurs.setGeometry(QtCore.QRect(x4, y2+60, 400, 22))
+        self.combo_can_valeurs.setObjectName("combo_can_valeurs")
+        self.combo_can_valeurs.setStyleSheet("font-family: Courier")
+        self.combo_can_valeurs.setVisible(False)
+  
         # Ajout des onglets à la tab d'onglets
         self.tabWidget.addTab(self.tab_cc, "")        
         self.tabWidget.addTab(self.tab_csc, "")
